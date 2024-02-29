@@ -67,11 +67,25 @@ function sendBulkEmails() {
     saveSpreadsheetToDrive();
   }
   
-  // Function to validate email format
+  // Function to validate email format and existence
   function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
-    return re.test(email);
+    if (!re.test(email)) {
+      return false; // Invalid email format
+    }
+    
+    // Check email existence online
+    var apiUrl = 'https://api.eva.pingutil.com/email?email=' + encodeURIComponent(email);
+    var response = UrlFetchApp.fetch(apiUrl);
+    var responseData = JSON.parse(response.getContentText());
+    
+    if (responseData.status === 'success' && responseData.data.deliverable) {
+      return true; // Email exists
+    } else {
+      return false; // Email does not exist or status unknown
+    }
   }
+
   
   // Function to get or create a sheet for duplicates
   function getOrCreateDuplicateSheet() {
