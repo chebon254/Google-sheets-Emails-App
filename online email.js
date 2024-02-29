@@ -45,11 +45,11 @@ function sendBulkEmails() {
 
       // Print "Sent" in column three
       sheet.getRange(sheet.getLastRow(), 6).setValue("Sent");
-      // MailApp.sendEmail({
-      //   to: email,
-      //   subject: "Welcome to Our Product!",
-      //   htmlBody: body
-      // });
+      MailApp.sendEmail({
+        to: email,
+        subject: "Welcome to Our Product!",
+        htmlBody: body
+      });
     }
   });
 
