@@ -1,6 +1,6 @@
 function sendBulkEmails() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  sheet.autoResizeColumns(1, 10);
+  setFixedWidthForColumns()
   var data = sheet.getDataRange().getValues();
   var uniqueEmails = {}; // Object to store unique emails
   var duplicates = []; // Array to store duplicate emails
@@ -45,11 +45,11 @@ function sendBulkEmails() {
 
       // Print "Sent" in column three
       sheet.getRange(sheet.getLastRow(), 6).setValue("Sent");
-      MailApp.sendEmail({
-        to: email,
-        subject: "Welcome to Our Product!",
-        htmlBody: body
-      });
+      // MailApp.sendEmail({
+      //   to: email,
+      //   subject: "Welcome to Our Product!",
+      //   htmlBody: body
+      // });
     }
   });
 
@@ -72,15 +72,22 @@ function sendBulkEmails() {
 }
 
 
-function doResizeColumns(sheet){
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var sheets = spreadsheet.getSheets();
+function setFixedWidthForColumns() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var fixedWidthMultiplier = 2.45; // Multiplier for the fixed width
   
-  // Iterate through each sheet in the spreadsheet
-  sheets.forEach(function(sheet) {
-    // Auto resize columns for each sheet
-    sheet.autoResizeColumns(1, 10);
-  });
+  // Get the original width of the first six columns
+  var originalWidths = [];
+  for (var i = 1; i <= 6; i++) {
+    originalWidths.push(sheet.getColumnWidth(i));
+  }
+  
+  // Set the fixed width for the first six columns
+  for (var i = 1; i <= 6; i++) {
+    var originalWidth = originalWidths[i - 1];
+    var fixedWidth = originalWidth * fixedWidthMultiplier;
+    sheet.setColumnWidth(i, fixedWidth);
+  }
 }
 
 
